@@ -1,6 +1,7 @@
-authors = ["Dennis Pustjens"]
 name = "MCDA"
 uuid = "1eb2c25e-38f7-11e9-26c3-5fd3a525b6cc"
+authors = ["Dennis Pustjens"]
 version = "0.1.0"
 
 [deps]
+Test = "8dfed614-e22c-5e08-85e1-65c5234f0b40"
