@@ -47,6 +47,14 @@ function convertSymbolicScale(val)
     return conversiondict[val]
 end
 
+function convertMinMaxDecr(x, mini, maxi)
+    return 10*(1-(x-mini)/(maxi-mini))
+end
+
+function convertMinMaxIncr(x, mini, maxi)
+    return 10*((x-mini)/(maxi-mini))
+end
+
 struct EvaluationMethods
     criteria::Vector{Criterion}
     evaluationmethod::String
