@@ -1,6 +1,6 @@
 module MCDA
 
-export Criterion, Concept, addcriterion!, globalweight, criterionvalue, criterionconvertedvalue, criterionconvertedifneededvalue
+export Criterion, Concept, addcriterion!, globalweight, criterionvalue, criterionconvertedvalue, criterionconvertedifneededvalue, promdiff
 
 struct Criterion
     name::String
@@ -80,67 +80,48 @@ struct EvaluationMethods
 end
 # Promethee
 #vshape
-function [P] = vshape(diff,z,optim,P)
-# optim is 1 for maximization and 2 for minimization
-
-maxnum = max(max(diff(:,:,z)));
-if optim == 1
-for i = 1:8
-    for j = 1:8
-        if diff(i,j,z)>0
-            P(i,j,z) = diff(i,j,z)/maxnum;
-        else
-            P(i,j,z) = 0;
-        end
+function vshape(d,p)
+    if d <= 0
+        return 0.0
     end
-end
-elseif optim == 2
-for i = 1:8
-    for j = 1:8
-        if diff(i,j,z)<0
-            P(i,j,z) = -diff(i,j,z)/maxnum;
-        else
-            P(i,j,z) = 0;
-        end
+    if d > p 
+        return 1.0
     end
-end
-end
-end
-#usual
-function [P] = usual(diff,z,optim,P)
-# optim is 1 for maximization and 2 for minimization
-if optim == 1
-for i = 1:8
-    for j = 1:8
-        if diff(i,j,z)>0
-            P(i,j,z) = 1;
-        else
-            P(i,j,z) = 0;
-        end
-    end
+    return d/p
 end
 
-elseif optim == 2
-for i = 1:8
-    for j = 1:8
-        if diff(i,j,z)<0
-            P(i,j,z) = 1;
-        else
-            P(i,j,z) = 0;
-        end
+function usual(d)
+    if d > 0
+        return 1.0
     end
-end
-end
+    return 0.0
 end
 
-diff  = zeros(8,8,13);
-for z = 1:13
-    for i = 1:8
-        for j = 1:8
-            diff(i,j,z) = M(i,z)-M(j,z);
-        end
-    end
-end
+"""
+Calculate preference for Promethee
+    diff: differences matrix
+    pfunctions: Preference function for each criterion, e.g. for three criteria:
+    [usual, d -> vshape(d,1.5), d -> vshape(d,2.0)]
+    minmax: for rach criterion 1 for maximization, -1 for minimization, e.g.
+    [-1, 1, 1]
+"""
+function promdiff(diff, pfunctions, minmax)
+    # Check that the input is correct:
+    (ni, nj, nz) = size(diff)
+    @assert nz == length(pfunctions)
+    @assert nz == length(minmax)
+    @assert all(abs.(minmax) .== 1)
 
+    # Create output matrix
+    P = zeros(size(diff))
+
+    # Loop over all dimensions
+    for I in CartesianIndices(diff)
+        (i,j,z) = Tuple(I) # I is equivalent to (i,j,z)
+        P[I] = pfunctions[z](minmax[z]*diff[I])
+    end
+
+    return P
+end
 
 end# module
