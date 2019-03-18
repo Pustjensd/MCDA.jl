@@ -155,3 +155,16 @@ display(maneuverability_values)
 println()
 println(criterionconvertedifneededvalue.(concepts,4))
 M = maneuverability_values
+
+diff  = zeros(8,8,13);
+for z = 1:13
+    for i = 1:8
+        for j = 1:8
+            diff[i,j,z] = M[i,z]-M[j,z];
+        end
+    end
+end
+
+preffuncs = fill(MCDA.usual, 13)
+minmax = ones(13)
+P = promdiff(diff, preffuncs, minmax)
