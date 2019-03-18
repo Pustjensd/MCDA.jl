@@ -1,6 +1,6 @@
 module MCDA
 
-export Criterion, Concept, addcriterion!
+export Criterion, Concept, addcriterion!, globalweight, criterionvalue, criterionconvertedvalue, criterionconvertedifneededvalue
 
 struct Criterion
     name::String
@@ -10,6 +10,8 @@ struct Criterion
 
     #Criterion(name, localweight, globalweight) = new(name, localweight, globalweight, identity)
 end
+
+globalweight(criterion) = criterion.globalweight
 
 struct Concept
     name::String
@@ -26,6 +28,22 @@ function convertedvalues(con)
         output[i] = crit.valueconverter(val)
     end
     return output
+end
+
+function criterionvalue(concept, i)
+    return concept.values[i]
+end
+
+function criterionconvertedvalue(concept, i)
+    return concept.criteria[i].valueconverter(criterionvalue(concept,i))
+end
+
+function criterionconvertedifneededvalue(concept, i)
+    val = criterionvalue(concept,i)
+    if typeof(val) <: Number
+        return val
+    end
+    return concept.criteria[i].valueconverter(val)
 end
 
 function addcriterion!(con::Concept, cr::Criterion, value)
@@ -60,5 +78,69 @@ struct EvaluationMethods
     evaluationmethod::String
     range::String
 end
+# Promethee
+#vshape
+function [P] = vshape(diff,z,optim,P)
+# optim is 1 for maximization and 2 for minimization
 
-end # module
+maxnum = max(max(diff(:,:,z)));
+if optim == 1
+for i = 1:8
+    for j = 1:8
+        if diff(i,j,z)>0
+            P(i,j,z) = diff(i,j,z)/maxnum;
+        else
+            P(i,j,z) = 0;
+        end
+    end
+end
+elseif optim == 2
+for i = 1:8
+    for j = 1:8
+        if diff(i,j,z)<0
+            P(i,j,z) = -diff(i,j,z)/maxnum;
+        else
+            P(i,j,z) = 0;
+        end
+    end
+end
+end
+end
+#usual
+function [P] = usual(diff,z,optim,P)
+# optim is 1 for maximization and 2 for minimization
+if optim == 1
+for i = 1:8
+    for j = 1:8
+        if diff(i,j,z)>0
+            P(i,j,z) = 1;
+        else
+            P(i,j,z) = 0;
+        end
+    end
+end
+
+elseif optim == 2
+for i = 1:8
+    for j = 1:8
+        if diff(i,j,z)<0
+            P(i,j,z) = 1;
+        else
+            P(i,j,z) = 0;
+        end
+    end
+end
+end
+end
+
+diff  = zeros(8,8,13);
+for z = 1:13
+    for i = 1:8
+        for j = 1:8
+            diff(i,j,z) = M(i,z)-M(j,z);
+        end
+    end
+end
+
+
+end# module

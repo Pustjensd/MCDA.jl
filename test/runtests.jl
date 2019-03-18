@@ -4,7 +4,7 @@ using Test
 criteria = [
     Criterion("Maneuverability", 8, 0.115, MCDA.convertSymbolicScale),
     Criterion("Signature profile", 9, 0.129, MCDA.convertSymbolicScale),
-    Criterion("Redundancy", 7, 0.101, x -> MCDA.convertMinMaxDecr(x, 1, 4)),
+    Criterion("Redundancy", 7, 0.101, x -> MCDA.convertMinMaxIncr(x, 1, 4)),
     Criterion("Nr. of components", 2, 0.023, x -> MCDA.convertMinMaxDecr(x, 14, 18)),
     Criterion("Space consumption", 5, 0.058, x -> MCDA.convertMinMaxDecr(x, 274, 715)),
     Criterion("Weight", 7, 0.081, x -> MCDA.convertMinMaxDecr(x, 255, 550)),
@@ -25,7 +25,7 @@ criteria = [
 concepts = []
 
 @show con = Concept("concept 1", criteria)
-con.values[1] = "---"
+con.values[1] = "ref"
 con.values[2] = "ref"
 con.values[3] = 2
 con.values[4] = 14
@@ -91,7 +91,7 @@ con.values[3] = 3
 con.values[4] = 16
 con.values[5] = 459.3
 con.values[6] = 368.4
-con.values[7] = 314.4
+con.values[7] = 312.4
 con.values[8] = "+"
 con.values[9] = "+++"
 con.values[10] = "-"
@@ -135,7 +135,7 @@ con.values[2] = "+++"
 con.values[3] = 2
 con.values[4] = 15
 con.values[5] = 690.2
-con.values[6] = 620.4
+con.values[6] = 550
 con.values[7] = 327.4
 con.values[8] = "+++"
 con.values[9] = "+++"
@@ -145,8 +145,13 @@ con.values[12] = 3.34
 con.values[13] = 0.137
 push!(concepts, con)
 
-
 for con in concepts
     cvals = MCDA.convertedvalues(con)
-    @show cvals
+    @show sum(cvals .* globalweight.(con.criteria))
 end
+
+maneuverability_values = criterionconvertedifneededvalue.(concepts,(1:length(criteria))')
+display(maneuverability_values)
+println()
+println(criterionconvertedifneededvalue.(concepts,4))
+M = maneuverability_values
