@@ -166,5 +166,27 @@ for z = 1:13
 end
 
 preffuncs = fill(MCDA.usual, 13)
+preffuncs = convert(Vector{Function}, preffuncs)
+preffuncs[1] = MCDA.usual
+# preffuncs[2] = (d -> MCDA.vshape(d,2.0))
 minmax = ones(13)
+minmax[1] = 1
+minmax[2] = 1
+minmax[3] = 1
+minmax[4] = -1
+minmax[5] = -1
+minmax[6] = -1
+minmax[7] = -1
+minmax[8] = 1
+minmax[9] = 1
+minmax[10] = 1
+minmax[11] = -1
+minmax[12] = -1
+minmax[13] = -1
 P = promdiff(diff, preffuncs, minmax)
+
+w = reshape(globalweight.(criteria), 1, 1, length(criteria))
+display(w)
+
+pimat = P .* w
+display(pimat)

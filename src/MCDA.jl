@@ -84,7 +84,7 @@ function vshape(d,p)
     if d <= 0
         return 0.0
     end
-    if d > p 
+    if d > p
         return 1.0
     end
     return d/p
@@ -102,7 +102,7 @@ Calculate preference for Promethee
     diff: differences matrix
     pfunctions: Preference function for each criterion, e.g. for three criteria:
     [usual, d -> vshape(d,1.5), d -> vshape(d,2.0)]
-    minmax: for rach criterion 1 for maximization, -1 for minimization, e.g.
+    minmax: for each criterion 1 for maximization, -1 for minimization, e.g.
     [-1, 1, 1]
 """
 function promdiff(diff, pfunctions, minmax)
