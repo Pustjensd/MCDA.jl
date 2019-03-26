@@ -1,3 +1,5 @@
+include(joinpath(@__DIR__,"testpromethee.jl"))
+exit()
 using MCDA
 using Test
 
@@ -149,26 +151,29 @@ for con in concepts
     cvals = MCDA.convertedvalues(con)
     @show sum(cvals .* globalweight.(con.criteria))
 end
-
-maneuverability_values = criterionconvertedifneededvalue.(concepts,(1:length(criteria))')
-display(maneuverability_values)
+nconcepts = length(concepts)
+M = criterionconvertedifneededvalue.(concepts,(1:length(criteria))')
 println()
 println(criterionconvertedifneededvalue.(concepts,4))
-M = maneuverability_values
 
-diff  = zeros(8,8,13);
-for z = 1:13
-    for i = 1:8
-        for j = 1:8
-            diff[i,j,z] = M[i,z]-M[j,z];
-        end
-    end
-end
-
+diff  = MCDA.diff(M)
+critmaxdiff = reshape(maximum(diff, dims=(1,2)), size(diff,3))
 preffuncs = fill(MCDA.usual, 13)
 preffuncs = convert(Vector{Function}, preffuncs)
 preffuncs[1] = MCDA.usual
-# preffuncs[2] = (d -> MCDA.vshape(d,2.0))
+preffuncs[2] = MCDA.usual
+preffuncs[3] = MCDA.usual
+preffuncs[4] = MCDA.usual
+preffuncs[5] = (d -> MCDA.vshape(d,critmaxdiff[5]))
+preffuncs[6] = (d -> MCDA.vshape(d,critmaxdiff[6]))
+preffuncs[7] = (d -> MCDA.vshape(d,critmaxdiff[7]))
+preffuncs[8] = MCDA.usual
+preffuncs[9] = MCDA.usual
+preffuncs[10] = MCDA.usual
+preffuncs[11] = (d -> MCDA.vshape(d,critmaxdiff[11]))
+preffuncs[12] = (d -> MCDA.vshape(d,critmaxdiff[12]))
+preffuncs[13] = (d -> MCDA.vshape(d,critmaxdiff[13]))
+
 minmax = ones(13)
 minmax[1] = 1
 minmax[2] = 1
@@ -188,5 +193,14 @@ P = promdiff(diff, preffuncs, minmax)
 w = reshape(globalweight.(criteria), 1, 1, length(criteria))
 display(w)
 
-pimat = P .* w
+pimat = reshape(sum(P .* w, dims=3), nconcepts, nconcepts)
 display(pimat)
+phip=MCDA.phip(pimat)
+println()
+display(phip)
+phim=MCDA.phim(pimat)
+println()
+display(phim)
+phi = phip-phim
+println()
+display(phi)

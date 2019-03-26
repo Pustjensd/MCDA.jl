@@ -1,5 +1,5 @@
 using MCDA
-using test
+using Test
 
 criteria = [
     Criterion("Manpower", 1, 0.116279, identity),
@@ -93,26 +93,22 @@ con.values[5] = 1
 con.values[6] = 4
 push!(concepts, con)
 
-maneuverability_values = criterionvalue.(concepts,(1:length(criteria))')
-display(maneuverability_values)
-M = maneuverability_values
+nconcepts = length(concepts)
 
-diff  = zeros(10,10,6);
-for z = 1:6
-    for i = 1:10
-        for j = 1:10
-            diff[i,j,z] = M[i,z]-M[j,z];
-        end
-    end
-end
+M = criterionvalue.(concepts,(1:length(criteria))')
 
+diff  = MCDA.diff(M)
+
+critmaxdiff = reshape(maximum(diff, dims=(1,2)), size(diff,3))
+
+preffuncs = fill(MCDA.usual, 6)
 preffuncs = convert(Vector{Function}, preffuncs)
-preffuncs[1] = MCDA.vshape
-preffuncs[2] = MCDA.vshape
-preffuncs[3] = MCDA.vshape
-preffuncs[4] = MCDA.vshape
+preffuncs[1] = (d -> MCDA.vshape(d,critmaxdiff[1]))
+preffuncs[2] = (d -> MCDA.vshape(d,critmaxdiff[2]))
+preffuncs[3] = (d -> MCDA.vshape(d,critmaxdiff[3]))
+preffuncs[4] = (d -> MCDA.vshape(d,critmaxdiff[4]))
 preffuncs[5] = MCDA.usual
-preffuncs[6] = MCDA.vshape
+preffuncs[6] = (d -> MCDA.vshape(d,critmaxdiff[6]))
 
 minmax = ones(6)
 minmax[1] = 1
@@ -121,3 +117,20 @@ minmax[3] = -1
 minmax[4] = -1
 minmax[5] = -1
 minmax[6] = 1
+
+P = promdiff(diff, preffuncs, minmax)
+
+w = reshape(globalweight.(criteria), 1, 1, length(criteria))
+display(w)
+
+pimat = reshape(sum(P .* w, dims=3), nconcepts, nconcepts)
+display(pimat)
+phip=MCDA.phip(pimat)
+println()
+display(phip)
+phim=MCDA.phim(pimat)
+println()
+display(phim)
+phi = phip-phim
+println()
+display(phi)

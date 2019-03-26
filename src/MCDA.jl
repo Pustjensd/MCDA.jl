@@ -97,6 +97,20 @@ function usual(d)
     return 0.0
 end
 
+function diff(M)
+    (nconcepts, ncriteria) = size(M)
+    D = zeros(nconcepts, nconcepts, ncriteria)
+    for z = 1:ncriteria
+        for i = 1:nconcepts
+            for j = 1:nconcepts
+                D[i,j,z] = M[i,z]-M[j,z];
+            end
+        end
+    end
+    return D
+end
+
+
 """
 Calculate preference for Promethee
     diff: differences matrix
@@ -122,6 +136,15 @@ function promdiff(diff, pfunctions, minmax)
     end
 
     return P
+end
+
+function phip(pimat)
+    nconcepts = size(pimat,1)
+    return reshape(sum(pimat,dims=2)/(nconcepts-1), nconcepts)
+end
+function phim(pimat)
+    nconcepts = size(pimat,1)
+    return reshape(sum(pimat,dims=1)/(nconcepts-1),nconcepts)
 end
 
 end# module
