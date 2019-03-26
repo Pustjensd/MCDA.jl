@@ -134,3 +134,27 @@ display(phim)
 phi = phip-phim
 println()
 display(phi)
+
+wmaxdiff = maximum(globalweight.(criteria))-minimum(globalweight.(criteria))
+CMcrit = zeros(6);
+for i = 1:6
+    for j = 1:6
+        diff = globalweight.(criteria)(i)-globalweight.(criteria)(j)
+        if diff == 0
+            CMcrit(i,j) = 1;
+        elseif diff>0
+            for k=0:8
+                if diff>k*wmaxdiff/9 && diff<=(k+1)*wmaxdiff/9
+                    CMcrit(i,j) = k+1;
+                end
+            end
+        elseif diff<0
+            for k= 0:8
+                if diff<-k*wmaxdiff/9 && diff>=-(k+1)*wmaxdiff/9
+                    CMcrit(i,j) = 1/(k+1);
+                end
+            end
+        end
+    end
+end
+           

@@ -78,7 +78,7 @@ struct EvaluationMethods
     evaluationmethod::String
     range::String
 end
-# Promethee
+"""Promethee"""
 #vshape
 function vshape(d,p)
     if d <= 0
@@ -146,5 +146,6 @@ function phim(pimat)
     nconcepts = size(pimat,1)
     return reshape(sum(pimat,dims=1)/(nconcepts-1),nconcepts)
 end
+"""AHP"""
 
 end# module
