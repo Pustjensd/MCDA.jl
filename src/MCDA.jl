@@ -11,6 +11,8 @@ struct Criterion
     #Criterion(name, localweight, globalweight) = new(name, localweight, globalweight, identity)
 end
 
+name(con) = con.name
+
 globalweight(criterion) = criterion.globalweight
 
 struct Concept
@@ -147,5 +149,19 @@ function phim(pimat)
     return reshape(sum(pimat,dims=1)/(nconcepts-1),nconcepts)
 end
 """AHP"""
-
+function ConvertRI(val)
+    conversiondict = Dict([
+        (1, 0),
+        (2, 0),
+        (3, 0.58),
+        (4, 0.9),
+        (5, 1.12),
+        (6, 1.24),
+        (7, 1.32),
+        (8, 1.41),
+        (9, 1.45),
+        (10, 1.49)
+    ])
+    return conversiondict[val]
+end
 end# module

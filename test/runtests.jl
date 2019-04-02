@@ -1,4 +1,6 @@
-include(joinpath(@__DIR__,"testpromethee.jl"))
+# include(joinpath(@__DIR__,"testpromethee.jl"))
+# exit()
+include(joinpath(@__DIR__,"testAHP.jl"))
 exit()
 using MCDA
 using Test
@@ -204,3 +206,12 @@ display(phim)
 phi = phip-phim
 println()
 display(phi)
+
+perms = reverse(sortperm(phi))
+
+println()
+display(phi[perms])
+println()
+
+display(MCDA.name.(concepts[perms]))
+println()
