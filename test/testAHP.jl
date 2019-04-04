@@ -62,7 +62,7 @@ con.values[5] = 5
 con.values[6] = 3
 push!(concepts, con)
 con = Concept("Spain", criteria)
-con.values[1] = 2
+con.values[1] = 3#2
 con.values[2] = 69
 con.values[3] = 800
 con.values[4] = 2.6
@@ -70,7 +70,7 @@ con.values[5] = 2
 con.values[6] = 4
 push!(concepts, con)
 con = Concept("Greece", criteria)
-con.values[1] = 3
+con.values[1] = 2#3
 con.values[2] = 62
 con.values[3] = 350
 con.values[4] = 3.3
@@ -78,7 +78,7 @@ con.values[5] = 3
 con.values[6] = 3
 push!(concepts, con)
 con = Concept("Poland", criteria)
-con.values[1] = 1
+con.values[1] = 4#1
 con.values[2] = 55
 con.values[3] = 450
 con.values[4] = 2.7
@@ -86,7 +86,7 @@ con.values[5] = 4
 con.values[6] = 2
 push!(concepts, con)
 con = Concept("Denmark", criteria)
-con.values[1] = 2
+con.values[1] = 3#2
 con.values[2] = 77
 con.values[3] = 550
 con.values[4] = 8.1
@@ -282,9 +282,29 @@ matsaf = CMsaf^100/10.0^100
 prioritysaf = sum(matsaf,dims=2)/sum(sum(matsaf))
 @show CRsaf = ConsRatio(CMsaf)
 
-# for i=1:10
-#      Totalpriority[i]= priorityman[i]*prioritycrit[1]+prioritypow[i]*prioritycrit[2]+prioritycon[i]*prioritycrit[3]
-#         +prioritymain[i]*prioritycrit[4]+priorityvil[i]*prioritycrit[5]+prioritysaf[i]*prioritycrit[6]
-# end
+# for idealized:
+# prioritycrit ./= maximum(prioritycrit);
+# priorityman ./= maximum(priorityman);
+# prioritypow ./= maximum(prioritypow);
+# prioritycon ./= maximum(prioritycon);
+# prioritymain ./= maximum(prioritymain);
+# priorityvil ./= maximum(priorityvil);
+# prioritysaf ./= maximum(prioritysaf);
 
-@show TotalpriorityItaly=priorityman[3]*prioritycrit[1]+prioritypow[3]*prioritycrit[2]+prioritycon[3]*prioritycrit[3]+prioritymain[3]*prioritycrit[4]+priorityvil[3]*prioritycrit[5]+prioritysaf[3]*prioritycrit[6]
+Totalpriority = zeros(10)
+for i in 1:10
+    # line continuation problem here
+    Totalpriority[i] = priorityman[i]*prioritycrit[1]+prioritypow[i]*prioritycrit[2]+prioritycon[i]*prioritycrit[3] +
+                       prioritymain[i]*prioritycrit[4]+priorityvil[i]*prioritycrit[5]+prioritysaf[i]*prioritycrit[6]
+    println("i: $i: ", priorityman[i]*prioritycrit[1]+prioritypow[i]*prioritycrit[2]+prioritycon[i]*prioritycrit[3]
+        +prioritymain[i]*prioritycrit[4]+priorityvil[i]*prioritycrit[5]+prioritysaf[i]*prioritycrit[6], " <=> ", Totalpriority[i])
+end
+
+display(Totalpriority)
+println()
+
+# alternative method
+priorityall = hcat(priorityman, prioritypow, prioritycon, prioritymain, priorityvil, prioritysaf)
+Totalpriority = priorityall * prioritycrit
+display(Totalpriority)
+println()
