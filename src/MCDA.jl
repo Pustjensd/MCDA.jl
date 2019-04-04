@@ -1,6 +1,8 @@
 module MCDA
 
-export Criterion, Concept, addcriterion!, globalweight, criterionvalue, criterionconvertedvalue, criterionconvertedifneededvalue, promdiff
+using LinearAlgebra
+
+export Criterion, Concept, addcriterion!, globalweight, criterionvalue, criterionconvertedvalue, criterionconvertedifneededvalue, promdiff, ConsRatio
 
 struct Criterion
     name::String
@@ -163,5 +165,39 @@ function ConvertRI(val)
         (10, 1.49)
     ])
     return conversiondict[val]
+end
+
+function ConsRatio(CM)
+    b=eigvals(CM)
+    n = size(CM,1)
+    lambdamax = maximum(abs.(b))
+    CI = (lambdamax-n)/(n-1)
+    RI = ConvertRI(n)
+    CR = CI/RI*100
+end
+function CMcrit(criteria)
+    ncriteria =length(criteria)
+CM = zeros(ncriteria,ncriteria)
+wmaxdiff = maximum(globalweight.(criteria))-minimum(globalweight.(criteria))
+for i = 1:ncriteria
+    for j = 1:ncriteria
+        diff = globalweight.(criteria)[i]-globalweight.(criteria)[j]
+        if diff == 0
+            CMcrit[i,j] = 1
+        elseif diff>0
+            for k=0:8
+                if diff>k*wmaxdiff/9 && diff<=(k+1)*wmaxdiff/9
+                    CMcrit[i,j] = k+1
+                end
+            end
+        elseif diff<0
+            for k= 0:8
+                if diff<-k*wmaxdiff/9 && diff>=-(k+1)*wmaxdiff/9
+                    CMcrit[i,j] = 1/(k+1)
+                end
+            end
+        end
+    end
+end
 end
 end# module

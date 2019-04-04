@@ -62,7 +62,7 @@ con.values[5] = 5
 con.values[6] = 3
 push!(concepts, con)
 con = Concept("Spain", criteria)
-con.values[1] = 2
+con.values[1] = 3#2
 con.values[2] = 69
 con.values[3] = 800
 con.values[4] = 2.6
@@ -70,7 +70,7 @@ con.values[5] = 2
 con.values[6] = 4
 push!(concepts, con)
 con = Concept("Greece", criteria)
-con.values[1] = 3
+con.values[1] = 2#3
 con.values[2] = 62
 con.values[3] = 350
 con.values[4] = 3.3
@@ -78,7 +78,7 @@ con.values[5] = 3
 con.values[6] = 3
 push!(concepts, con)
 con = Concept("Poland", criteria)
-con.values[1] = 1
+con.values[1] = 4#1
 con.values[2] = 55
 con.values[3] = 450
 con.values[4] = 2.7
@@ -86,7 +86,7 @@ con.values[5] = 4
 con.values[6] = 2
 push!(concepts, con)
 con = Concept("Denmark", criteria)
-con.values[1] = 2
+con.values[1] = 3#2
 con.values[2] = 77
 con.values[3] = 550
 con.values[4] = 8.1
@@ -97,7 +97,7 @@ push!(concepts, con)
 nconcepts = length(concepts)
 ncriteria = length(criteria)
 wmaxdiff = maximum(globalweight.(criteria))-minimum(globalweight.(criteria))
-# @show CMcrit= MCDA.CMcrit(criteria)
+
 CMcrit = zeros(6,6)
 for i = 1:6
     for j = 1:6
@@ -121,11 +121,8 @@ for i = 1:6
 end
 
 matcrit = CMcrit^100/10^57
-prioritycrit = sum(matcrit,dims=2)/sum(sum(matcrit))
-@show CRcrit = ConsRatio(CMcrit)
-# @show p = reverse(sortperm(reshape(prioritycrit,length(prioritycrit))))
-# @show collect(1:6)[p]
-
+@show prioritycrit = sum(matcrit,dims=2)/sum(sum(matcrit))
+@show prioritycrit = prioritycrit/maximum(prioritycrit)
 CMman = zeros(10,10)
 for i = 1:10
     for j = 1:10
@@ -150,7 +147,7 @@ end
 
 matman = CMman^100/10.0^100
 priorityman = sum(matman,dims=2)/sum(sum(matman))
-@show CRman =ConsRatio(CMman)
+@show priorityman = priorityman/maximum(priorityman)
 
 maxdiff = maximum(criterionvalue.(concepts,(2)))-minimum(criterionvalue.(concepts,(2)))
 CMpow = zeros(10,10)
@@ -177,8 +174,7 @@ end
 
 matpow = CMpow^100/10^57
 prioritypow = sum(matpow,dims=2)/sum(sum(matpow))
-@show CRpow = ConsRatio(CMpow)
-
+@show prioritypow = prioritypow/maximum(prioritypow)
 construction = 1000*ones(1,10) - criterionvalue.(concepts,(3))'
 maxdiff = maximum(construction)-minimum(construction)
 CMcon = zeros(10,10)
@@ -205,8 +201,7 @@ end
 
 matcon = CMcon^100/10^57;
 prioritycon = sum(matcon,dims=2)/sum(sum(matcon))
-@show CRcon = ConsRatio(CMcon)
-
+@show prioritycon = prioritycon/maximum(prioritycon)
 maintenance = 9.7*ones(1,10) - criterionvalue.(concepts,(4))'
 maxdiff = maximum(maintenance)-minimum(maintenance)
 CMmain = zeros(10,10)
@@ -232,7 +227,7 @@ for i = 1:10
 end
 matmain = CMmain^100/10^57
 prioritymain = sum(matmain,dims=2)/sum(sum(matmain))
-@show CRmain = ConsRatio(CMmain)
+@show prioritymain = prioritymain/maximum(prioritymain)
 
 villages= criterionvalue.(concepts,(5))'
 CMvil = zeros(10,10)
@@ -250,7 +245,7 @@ for i = 1:10
 end
 matvil = CMvil^100/10^57
 priorityvil = sum(matvil,dims=2)/sum(sum(matvil))
-@show CRvil = ConsRatio(CMvil)
+@show priorityvil = priorityvil/maximum(priorityvil)
 
 safety = criterionvalue.(concepts,(6))'
 CMsaf = zeros(10,10)
@@ -278,13 +273,8 @@ for i = 1:10
         end
     end
 end
-matsaf = CMsaf^100/10.0^100
+matsaf = CMsaf^100/10^57
+# println()
+# display(matsaf)
 prioritysaf = sum(matsaf,dims=2)/sum(sum(matsaf))
-@show CRsaf = ConsRatio(CMsaf)
-
-# for i=1:10
-#      Totalpriority[i]= priorityman[i]*prioritycrit[1]+prioritypow[i]*prioritycrit[2]+prioritycon[i]*prioritycrit[3]
-#         +prioritymain[i]*prioritycrit[4]+priorityvil[i]*prioritycrit[5]+prioritysaf[i]*prioritycrit[6]
-# end
-
-@show TotalpriorityItaly=priorityman[3]*prioritycrit[1]+prioritypow[3]*prioritycrit[2]+prioritycon[3]*prioritycrit[3]+prioritymain[3]*prioritycrit[4]+priorityvil[3]*prioritycrit[5]+prioritysaf[3]*prioritycrit[6]
+@show prioritysaf = prioritysaf/maximum(prioritysaf)
