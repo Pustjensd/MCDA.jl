@@ -202,30 +202,35 @@ function CMcrit(criteria)
     return CM
 end
 
-function CMScale1_3(criterionvalue.concepts,(?))
+function CMScale1_3(diff)
+    if diff == 0
+        return 1
+    elseif diff == 1
+        return 3
+    elseif diff == 2
+        return 6
+    elseif diff == 3
+        return 9
+    elseif diff == -1
+        return 1/3
+    elseif diff == -2
+        return 1/6
+    elseif diff == -3
+        return 1/9
+    end
+    error("Value $diff passed to CMScale1_3 is not allowed")
+end
+
+function buildCM(concepts, concept_idx, diff_function)
     nconcepts= length(concepts)
     CM =zeros(nconcepts,nconcepts)
     for i= 1:nconcepts
         for j= 1:nconcepts
-            diff = criterionvalue.(concepts),(?))[i]-criterionvalue.(concepts,(?))[j]
-            if diff == 0
-            CM = 1
-        elseif diff == 1
-            CM = 3
-        elseif diff == 2
-            CM = 6
-        elseif diff == 3
-            CM = 9
-        elseif diff == -1
-            CM = 1/3
-        elseif diff == -2
-            CM = 1/6
-        elseif diff == -3
-            CM = 1/9
+            diff = criterionvalue.(concepts,concept_idx)[i]-criterionvalue.(concepts,concept_idx)'[j]
+            CM[i,j] = diff_function(diff)
         end
     end
     return CM
 end
-
 
 end# module

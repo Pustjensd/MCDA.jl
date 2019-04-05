@@ -105,28 +105,7 @@ prioritycrit = sum(matcrit,dims=2)/sum(sum(matcrit))
 # @show p = reverse(sortperm(reshape(prioritycrit,length(prioritycrit))))
 # @show collect(1:6)[p]
 
-CMman = zeros(10,10)
-for i = 1:10
-    for j = 1:10
-        diff = criterionvalue.(concepts,(1))[i]-criterionvalue.(concepts,(1))'[j]
-        if diff == 0
-            CMman[i,j] = 1
-        elseif diff == 1
-            CMman[i,j] = 3
-        elseif diff == 2
-            CMman[i,j] = 6
-        elseif diff == 3
-            CMman[i,j] = 9
-        elseif diff == -1
-            CMman[i,j] = 1/3
-        elseif diff == -2
-            CMman[i,j] = 1/6
-        elseif diff == -3
-            CMman[i,j] = 1/9
-        end
-    end
-end
-
+CMman = MCDA.buildCM(concepts, 1, MCDA.CMScale1_3)
 matman = CMman^100/10.0^100
 priorityman = sum(matman,dims=2)/sum(sum(matman))
 @show CRman =ConsRatio(CMman)
@@ -275,8 +254,6 @@ for i in 1:10
     # line continuation problem here
     Totalpriority[i] = priorityman[i]*prioritycrit[1]+prioritypow[i]*prioritycrit[2]+prioritycon[i]*prioritycrit[3] +
                        prioritymain[i]*prioritycrit[4]+priorityvil[i]*prioritycrit[5]+prioritysaf[i]*prioritycrit[6]
-    println("i: $i: ", priorityman[i]*prioritycrit[1]+prioritypow[i]*prioritycrit[2]+prioritycon[i]*prioritycrit[3]
-        +prioritymain[i]*prioritycrit[4]+priorityvil[i]*prioritycrit[5]+prioritysaf[i]*prioritycrit[6], " <=> ", Totalpriority[i])
 end
 
 display(Totalpriority)
