@@ -96,43 +96,20 @@ push!(concepts, con)
 
 nconcepts = length(concepts)
 ncriteria = length(criteria)
-wmaxdiff = maximum(globalweight.(criteria))-minimum(globalweight.(criteria))
-CMcrit = MCDA.CMcrit(criteria)
 
+CMcrit = MCDA.CMcrit(criteria)
 matcrit = CMcrit^100/10^57
 prioritycrit = sum(matcrit,dims=2)/sum(sum(matcrit))
 @show CRcrit = ConsRatio(CMcrit)
 # @show p = reverse(sortperm(reshape(prioritycrit,length(prioritycrit))))
 # @show collect(1:6)[p]
 
-CMman = MCDA.buildCM(concepts, 1, MCDA.CMScale1_3)
+CMman = MCDA.buildCM(concepts, 1, MCDA.CMScale0_3)
 matman = CMman^100/10.0^100
 priorityman = sum(matman,dims=2)/sum(sum(matman))
 @show CRman =ConsRatio(CMman)
 
-maxdiff = maximum(criterionvalue.(concepts,(2)))-minimum(criterionvalue.(concepts,(2)))
-CMpow = zeros(10,10)
-for i = 1:10
-    for j = 1:10
-        diff = criterionvalue.(concepts,(2))[i]-criterionvalue.(concepts,(2))[j]
-        if diff == 0
-            CMpow[i,j] = 1
-        elseif diff>0
-            for k=0:8
-                if diff>k*maxdiff/9 && diff<=(k+1)*maxdiff/9
-                    CMpow[i,j] = k+1
-                end
-            end
-        elseif diff<0
-            for k=0:8
-                if diff<-k*maxdiff/9 && diff>=-(k+1)*maxdiff/9
-                    CMpow[i,j] = 1/(k+1)
-                end
-            end
-        end
-   end
-end
-@show CMpow
+CMpow = MCDA.buildCM(concepts, 2, MCDA.CMScale0_maxdiff)
 matpow = CMpow^100/10^57
 prioritypow = sum(matpow,dims=2)/sum(sum(matpow))
 @show CRpow = ConsRatio(CMpow)
@@ -192,50 +169,12 @@ matmain = CMmain^100/10^57
 prioritymain = sum(matmain,dims=2)/sum(sum(matmain))
 @show CRmain = ConsRatio(CMmain)
 
-villages= criterionvalue.(concepts,(5))'
-CMvil = zeros(10,10)
-for i = 1:10
-    for j = 1:10
-        diff = villages[i]-villages[j]
-        if diff==0
-            CMvil[i,j] = 1
-        elseif diff>0
-            CMvil[i,j] = 1/3
-        elseif diff<0
-            CMvil[i,j] = 3
-        end
-    end
-end
+CMvil= MCDA.buildCM(concepts, 5, MCDA.CMscale0)
 matvil = CMvil^100/10^57
 priorityvil = sum(matvil,dims=2)/sum(sum(matvil))
 @show CRvil = ConsRatio(CMvil)
 
-safety = criterionvalue.(concepts,(6))'
-CMsaf = zeros(10,10)
-for i = 1:10
-    for j = 1:10
-        diff = safety[i]-safety[j]
-        if diff == 0
-            CMsaf[i,j] = 1
-        elseif diff == 1
-            CMsaf[i,j] = 3
-        elseif diff == 2
-            CMsaf[i,j] = 5
-        elseif diff == 3
-            CMsaf[i,j] = 7
-        elseif diff == 4
-            CMsaf[i,j] = 9
-        elseif diff == -1
-            CMsaf[i,j] = 1/3
-        elseif diff == -2
-            CMsaf[i,j] = 1/5
-        elseif diff == -3
-            CMsaf[i,j] = 1/7
-        elseif diff == -4
-            CMsaf[i,j] = 1/9
-        end
-    end
-end
+CMsaf = MCDA.buildCM(concepts, 6, MCDA.CMScale0_4)
 matsaf = CMsaf^100/10.0^100
 prioritysaf = sum(matsaf,dims=2)/sum(sum(matsaf))
 @show CRsaf = ConsRatio(CMsaf)

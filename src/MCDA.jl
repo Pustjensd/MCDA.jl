@@ -202,7 +202,7 @@ function CMcrit(criteria)
     return CM
 end
 
-function CMScale1_3(diff)
+function CMScale0_3(diff,maxdiff)
     if diff == 0
         return 1
     elseif diff == 1
@@ -218,16 +218,68 @@ function CMScale1_3(diff)
     elseif diff == -3
         return 1/9
     end
-    error("Value $diff passed to CMScale1_3 is not allowed")
+    error("Value $diff passed to CMScale0_3 is not allowed")
+end
+function CMScale0_maxdiff(diff, maxdiff)
+    if diff == 0
+        return 1
+    elseif diff>0
+        for k=0:8
+            if diff>k*maxdiff/9 && diff<=(k+1)*maxdiff/9
+                return k+1
+            end
+        end
+    elseif diff<0
+        for k=0:8
+            if diff<-k*maxdiff/9 && diff>=-(k+1)*maxdiff/9
+                return 1/(k+1)
+            end
+        end
+    end
+end
+function CMScale0_4(diff, maxdiff)
+    if diff == 0
+        return 1
+    elseif diff == 1
+        return 3
+    elseif diff == 2
+        return 5
+    elseif diff == 3
+        return 7
+    elseif diff == 4
+        return 9
+    elseif diff == -1
+        return 1/3
+    elseif diff == -2
+        return 1/5
+    elseif diff == -3
+        return 1/7
+    elseif diff == -4
+        return 1/9
+    end
+end
+function CMscale0(diff, maxdiff)
+    if diff==0
+        return 1
+    elseif diff>0
+        return 1/3
+    elseif diff<0
+        return 3
+    end
 end
 
-function buildCM(concepts, concept_idx, diff_function)
+#if smaller is better:
+#Min: maximum(criterionvalue.(concepts,concept_idx))*ones(1,nconcepts)-criterionvalue.(concepts,concept_idx)
+#if bigger is better: max
+function buildCM(concepts, concept_idx, diff_function#,MaxOrMin
+    )
     nconcepts= length(concepts)
     CM =zeros(nconcepts,nconcepts)
+    maxdiff= maximum(criterionvalue.(concepts,concept_idx))-minimum((criterionvalue.(concepts,concept_idx)))
     for i= 1:nconcepts
         for j= 1:nconcepts
             diff = criterionvalue.(concepts,concept_idx)[i]-criterionvalue.(concepts,concept_idx)'[j]
-            CM[i,j] = diff_function(diff)
+            CM[i,j] = diff_function(diff,maxdiff)
         end
     end
     return CM

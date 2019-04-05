@@ -278,3 +278,8 @@ matsaf = CMsaf^100/10^57
 # display(matsaf)
 prioritysaf = sum(matsaf,dims=2)/sum(sum(matsaf))
 @show prioritysaf = prioritysaf/maximum(prioritysaf)
+
+priorityall = hcat(priorityman, prioritypow, prioritycon, prioritymain, priorityvil, prioritysaf)
+Totalpriority = priorityall * prioritycrit
+display(Totalpriority)
+println()
