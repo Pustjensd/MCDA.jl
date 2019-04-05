@@ -202,4 +202,30 @@ function CMcrit(criteria)
     return CM
 end
 
+function CMScale1_3(criterionvalue.concepts,(?))
+    nconcepts= length(concepts)
+    CM =zeros(nconcepts,nconcepts)
+    for i= 1:nconcepts
+        for j= 1:nconcepts
+            diff = criterionvalue.(concepts),(?))[i]-criterionvalue.(concepts,(?))[j]
+            if diff == 0
+            CM = 1
+        elseif diff == 1
+            CM = 3
+        elseif diff == 2
+            CM = 6
+        elseif diff == 3
+            CM = 9
+        elseif diff == -1
+            CM = 1/3
+        elseif diff == -2
+            CM = 1/6
+        elseif diff == -3
+            CM = 1/9
+        end
+    end
+    return CM
+end
+
+
 end# module

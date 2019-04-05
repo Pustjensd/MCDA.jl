@@ -153,7 +153,7 @@ for i = 1:10
         end
    end
 end
-
+@show CMpow
 matpow = CMpow^100/10^57
 prioritypow = sum(matpow,dims=2)/sum(sum(matpow))
 @show CRpow = ConsRatio(CMpow)
