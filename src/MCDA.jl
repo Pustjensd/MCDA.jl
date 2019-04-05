@@ -177,27 +177,29 @@ function ConsRatio(CM)
 end
 function CMcrit(criteria)
     ncriteria =length(criteria)
-CM = zeros(ncriteria,ncriteria)
-wmaxdiff = maximum(globalweight.(criteria))-minimum(globalweight.(criteria))
-for i = 1:ncriteria
-    for j = 1:ncriteria
-        diff = globalweight.(criteria)[i]-globalweight.(criteria)[j]
-        if diff == 0
-            CMcrit[i,j] = 1
-        elseif diff>0
-            for k=0:8
-                if diff>k*wmaxdiff/9 && diff<=(k+1)*wmaxdiff/9
-                    CMcrit[i,j] = k+1
+    CM = zeros(ncriteria,ncriteria)
+    wmaxdiff = maximum(globalweight.(criteria))-minimum(globalweight.(criteria))
+    for i = 1:ncriteria
+        for j = 1:ncriteria
+            diff = globalweight.(criteria)[i]-globalweight.(criteria)[j]
+            if diff == 0
+                CM[i,j] = 1
+            elseif diff>0
+                for k=0:8
+                    if diff>k*wmaxdiff/9 && diff<=(k+1)*wmaxdiff/9
+                        CM[i,j] = k+1
+                    end
                 end
-            end
-        elseif diff<0
-            for k= 0:8
-                if diff<-k*wmaxdiff/9 && diff>=-(k+1)*wmaxdiff/9
-                    CMcrit[i,j] = 1/(k+1)
+            elseif diff<0
+                for k= 0:8
+                    if diff<-k*wmaxdiff/9 && diff>=-(k+1)*wmaxdiff/9
+                        CM[i,j] = 1/(k+1)
+                    end
                 end
             end
         end
     end
+    return CM
 end
-end
+
 end# module

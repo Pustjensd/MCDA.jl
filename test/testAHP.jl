@@ -97,28 +97,7 @@ push!(concepts, con)
 nconcepts = length(concepts)
 ncriteria = length(criteria)
 wmaxdiff = maximum(globalweight.(criteria))-minimum(globalweight.(criteria))
-# @show CMcrit= MCDA.CMcrit(criteria)
-CMcrit = zeros(6,6)
-for i = 1:6
-    for j = 1:6
-        diff = globalweight.(criteria)[i]-globalweight.(criteria)[j]
-        if diff == 0
-            CMcrit[i,j] = 1
-        elseif diff>0
-            for k=0:8
-                if diff>k*wmaxdiff/9 && diff<=(k+1)*wmaxdiff/9
-                    CMcrit[i,j] = k+1
-                end
-            end
-        elseif diff<0
-            for k= 0:8
-                if diff<-k*wmaxdiff/9 && diff>=-(k+1)*wmaxdiff/9
-                    CMcrit[i,j] = 1/(k+1)
-                end
-            end
-        end
-    end
-end
+CMcrit = MCDA.CMcrit(criteria)
 
 matcrit = CMcrit^100/10^57
 prioritycrit = sum(matcrit,dims=2)/sum(sum(matcrit))
