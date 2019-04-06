@@ -271,14 +271,17 @@ end
 #if smaller is better:
 #Min: maximum(criterionvalue.(concepts,concept_idx))*ones(1,nconcepts)-criterionvalue.(concepts,concept_idx)
 #if bigger is better: max
-function buildCM(concepts, concept_idx, diff_function#,MaxOrMin
-    )
+function buildCM(concepts, concept_idx, diff_function; smaller_is_better=false)
     nconcepts= length(concepts)
     CM =zeros(nconcepts,nconcepts)
-    maxdiff= maximum(criterionvalue.(concepts,concept_idx))-minimum((criterionvalue.(concepts,concept_idx)))
+    critvals = criterionvalue.(concepts,concept_idx) # Cache the criterion values
+    if smaller_is_better
+        critvals .= fill(maximum(critvals), nconcepts) .- critvals 
+    end
+    maxdiff = maximum(critvals)-minimum(critvals)
     for i= 1:nconcepts
         for j= 1:nconcepts
-            diff = criterionvalue.(concepts,concept_idx)[i]-criterionvalue.(concepts,concept_idx)'[j]
+            diff = critvals[i]-critvals[j]
             CM[i,j] = diff_function(diff,maxdiff)
         end
     end
