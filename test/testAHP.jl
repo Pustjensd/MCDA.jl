@@ -114,30 +114,7 @@ matpow = CMpow^100/10^57
 prioritypow = sum(matpow,dims=2)/sum(sum(matpow))
 @show CRpow = ConsRatio(CMpow)
 
-construction = 1000*ones(1,10) - criterionvalue.(concepts,(3))'
-maxdiff = maximum(construction)-minimum(construction)
-CMcon = zeros(10,10)
- for i = 1:10
-    for j = 1:10
-        diff = construction[i]-construction[j]
-        if diff == 0
-            CMcon[i,j] = 1
-        elseif diff>0
-            for k=0:8
-                if diff>k*maxdiff/9 && diff<=(k+1)*maxdiff/9
-                    CMcon[i,j] = k+1
-                end
-            end
-        elseif diff<0
-            for k=0:8
-                if diff<-k*maxdiff/9 && diff>=-(k+1)*maxdiff/9
-                    CMcon[i,j] = 1/(k+1)
-                end
-            end
-        end
-   end
-end
-
+CMcon = MCDA.buildCM(concepts, 3, MCDA.CMScale0_maxdiff; smaller_is_better=true)
 matcon = CMcon^100/10^57;
 prioritycon = sum(matcon,dims=2)/sum(sum(matcon))
 @show CRcon = ConsRatio(CMcon)
