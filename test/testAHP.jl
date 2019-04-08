@@ -94,9 +94,6 @@ con.values[5] = 1
 con.values[6] = 4
 push!(concepts, con)
 
-nconcepts = length(concepts)
-ncriteria = length(criteria)
-
 CMcrit = MCDA.CMcrit(criteria)
 matcrit = CMcrit^100/10^57
 prioritycrit = sum(matcrit,dims=2)/sum(sum(matcrit))
@@ -119,29 +116,7 @@ matcon = CMcon^100/10^57;
 prioritycon = sum(matcon,dims=2)/sum(sum(matcon))
 @show CRcon = ConsRatio(CMcon)
 
-maintenance = 9.7*ones(1,10) - criterionvalue.(concepts,(4))'
-maxdiff = maximum(maintenance)-minimum(maintenance)
-CMmain = zeros(10,10)
-for i = 1:10
-    for j = 1:10
-        diff = maintenance[i]-maintenance[j]
-        if diff == 0
-            CMmain[i,j] = 1
-        elseif diff>0
-            for k=0:8
-                if diff>k*maxdiff/9 && diff<=(k+1)*maxdiff/9
-                    CMmain[i,j] = k+1
-                end
-            end
-        elseif diff<0
-            for k=0:8
-                if diff<-k*maxdiff/9 && diff>=-(k+1)*maxdiff/9
-                    CMmain[i,j] = 1/(k+1)
-                end
-            end
-        end
-   end
-end
+CMmain = MCDA.buildCM(concepts, 4, MCDA.CMScale0_maxdiff; smaller_is_better=true)
 matmain = CMmain^100/10^57
 prioritymain = sum(matmain,dims=2)/sum(sum(matmain))
 @show CRmain = ConsRatio(CMmain)

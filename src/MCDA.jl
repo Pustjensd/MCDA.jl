@@ -162,7 +162,12 @@ function ConvertRI(val)
         (7, 1.32),
         (8, 1.41),
         (9, 1.45),
-        (10, 1.49)
+        (10, 1.49),
+        (11, 1.52),
+        (12, 1.54),
+        (13, 1.56),
+        (14, 1.58),
+        (15, 1.59)
     ])
     return conversiondict[val]
 end
@@ -276,7 +281,7 @@ function buildCM(concepts, concept_idx, diff_function; smaller_is_better=false)
     CM =zeros(nconcepts,nconcepts)
     critvals = criterionvalue.(concepts,concept_idx) # Cache the criterion values
     if smaller_is_better
-        critvals .= fill(maximum(critvals), nconcepts) .- critvals 
+        critvals .= fill(maximum(critvals), nconcepts) .- critvals
     end
     maxdiff = maximum(critvals)-minimum(critvals)
     for i= 1:nconcepts
