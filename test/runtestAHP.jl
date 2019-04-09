@@ -148,3 +148,63 @@ CMcon1 = MCDA.buildCM(concepts, 1, MCDA.CMScale0_maxdiff)
 matcon1 = CMcon1^100/10^57
 prioritycon1 = sum(matcon1,dims=2)/sum(sum(matcon1))
 @show CRcon1 = ConsRatio(CMcon1)
+
+CMcon2 = MCDA.buildCM(concepts, 2, MCDA.CMScale0_maxdiff)
+matcon2 = CMcon2^100/10^57
+prioritycon2 = sum(matcon2,dims=2)/sum(sum(matcon2))
+@show CRcon2 = ConsRatio(CMcon2)
+
+CMcon3 = MCDA.buildCM(concepts, 3, MCDA.CMscale0_maxdiff)
+matcon3 = CMcon3^100/10^57
+prioritycon3 = sum(matcon3,dims=2)/sum(sum(matcon3))
+@show CRcon3 = ConsRatio(CMcon3)
+
+CMcon4 = MCDA.buildCM(concepts, 4, MCDA.CMScale0_4; smaller_is_better=true)
+matcon4 = CMcon4^100/10^57
+prioritycon4 = sum(matcon4,dims=2)/sum(sum(matcon4))
+@show CRcon4 = ConsRatio(CMcon4)
+
+CMcon5 = MCDA.buildCM(concepts, 5, MCDA.CMScale0_maxdiff; smaller_is_better=true)
+matcon5 = CMcon5^100/10^57
+prioritycon5 = sum(matcon5,dims=2)/sum(sum(matcon5))
+@show CRcon5 = ConsRatio(CMcon5)
+
+CMcon6 = MCDA.buildCM(concepts, 6, MCDA.CMScale0_maxdiff; smaller_is_better=true)
+matcon6 = CMcon6^100/10^57
+prioritycon6 = sum(matcon6,dims=2)/sum(sum(matcon6))
+@show CRcon6 = ConsRatio(CMcon6)
+
+CMcon7 = MCDA.buildCM(concepts, 7, MCDA.CMScale0_maxdiff; smaller_is_better=true)
+matcon7 = CMcon7^100/10^57
+prioritycon7 = sum(matcon7,dims=2)/sum(sum(matcon7))
+@show CRcon7 = ConsRatio(CMcon7)
+
+CMcon8 = MCDA.buildCM(concepts, 8, MCDA.CMScale0_maxdiff)
+matcon8 = CMcon8^100/10^57
+prioritycon8 = sum(matcon8,dims=2)/sum(sum(matcon8))
+@show CRcon8 = ConsRatio(CMcon8)
+
+CMcon9 = MCDA.buildCM(concepts, 9, MCDA.CMScale0_maxdiff)
+matcon9 = CMcon9^100/10^57
+prioritycon9 = sum(matcon9,dims=2)/sum(sum(matcon9))
+@show CRcon9 = ConsRatio(CMcon9)
+
+CMcon10 = MCDA.buildCM(concepts, 10, MCDA.CMScale0_maxdiff)
+matcon10 = CMcon10^100/10^57
+prioritycon10 = sum(matcon10,dims=2)/sum(sum(matcon10))
+@show CRcon10 = ConsRatio(CMcon10)
+
+CMcon11 = MCDA.buildCM(concepts, 11, MCDA.CMScale0_maxdiff; smaller_is_better=true)
+matcon11 = CMcon11^100/10^57
+prioritycon11 = sum(matcon11,dims=2)/sum(sum(matcon11))
+@show CRcon11 = ConsRatio(CMcon11)
+
+CMcon12 = MCDA.buildCM(concepts, 12, MCDA.CMScale0_maxdiff; smaller_is_better=true)
+matcon12 = CMcon12^100/10^57
+prioritycon12 = sum(matcon12,dims=2)/sum(sum(matcon12))
+@show CRcon12 = ConsRatio(CMcon12)
+
+CMcon13 = MCDA.buildCM(concepts, 13, MCDA.CMScale0_maxdiff; smaller_is_better=true)
+matcon13 = CMcon13^100/10^57
+prioritycon13 = sum(matcon13,dims=2)/sum(sum(matcon13))
+@show CRcon13 = ConsRatio(CMcon13)
