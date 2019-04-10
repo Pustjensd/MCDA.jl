@@ -206,5 +206,10 @@ prioritycon12 = sum(matcon12,dims=2)/sum(sum(matcon12))
 
 CMcon13 = MCDA.buildCM(concepts, 13, MCDA.CMScale0_maxdiff; smaller_is_better=true)
 matcon13 = CMcon13^100/10^57
-prioritycon13 = sum(matcon13,dims=2)/sum(sum(matcon13))
+@show prioritycon13 = sum(matcon13,dims=2)/sum(sum(matcon13))
 @show CRcon13 = ConsRatio(CMcon13)
+
+priorityall = hcat(prioritycon1, prioritycon2, prioritycon3, prioritycon4, prioritycon5, prioritycon6, prioritycon7, prioritycon8, prioritycon9, prioritycon10, prioritycon11, prioritycon12, prioritycon13)
+Totalpriority = priorityall * prioritycrit
+display(Totalpriority)
+println()
