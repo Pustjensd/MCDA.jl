@@ -154,7 +154,7 @@ matcon2 = CMcon2^100/10^57
 prioritycon2 = sum(matcon2,dims=2)/sum(sum(matcon2))
 @show CRcon2 = ConsRatio(CMcon2)
 
-CMcon3 = MCDA.buildCM(concepts, 3, MCDA.CMscale0_maxdiff)
+CMcon3 = MCDA.buildCM(concepts, 3, MCDA.CMScale0_maxdiff)
 matcon3 = CMcon3^100/10^57
 prioritycon3 = sum(matcon3,dims=2)/sum(sum(matcon3))
 @show CRcon3 = ConsRatio(CMcon3)

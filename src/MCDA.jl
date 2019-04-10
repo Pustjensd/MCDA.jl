@@ -230,17 +230,18 @@ function CMScale0_maxdiff(diff, maxdiff)
         return 1
     elseif diff>0
         for k=0:8
-            if diff>k*maxdiff/9 && diff<=(k+1)*maxdiff/9
+            if diff>k*maxdiff/9 && (diff<=(k+1)*maxdiff/9 || (k == 8 && diff <= maxdiff)) # Last condition necessary for numerical precision
                 return k+1
             end
         end
     elseif diff<0
         for k=0:8
-            if diff<-k*maxdiff/9 && diff>=-(k+1)*maxdiff/9
+            if diff<-k*maxdiff/9 && (diff>=-(k+1)*maxdiff/9 || (k == 8 && diff <= -maxdiff))
                 return 1/(k+1)
             end
         end
     end
+    error("No diff found for value $diff and maxdiff $maxdiff")
 end
 function CMScale0_4(diff, maxdiff)
     if diff == 0
@@ -279,7 +280,7 @@ end
 function buildCM(concepts, concept_idx, diff_function; smaller_is_better=false)
     nconcepts= length(concepts)
     CM =zeros(nconcepts,nconcepts)
-    critvals = criterionvalue.(concepts,concept_idx) # Cache the criterion values
+    critvals = criterionconvertedifneededvalue.(concepts,concept_idx) # Cache the criterion values
     if smaller_is_better
         critvals .= fill(maximum(critvals), nconcepts) .- critvals
     end
