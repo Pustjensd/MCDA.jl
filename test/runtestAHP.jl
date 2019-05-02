@@ -222,3 +222,5 @@ Nr_of_components = [prioritycrit[4], prioritycon4...], Space_consumption = [prio
  prioritycon5...], Weight = [prioritycrit[6], prioritycon6...] )
  display(df)
  println()
+display(ranking(prioritycon1))
+println()
