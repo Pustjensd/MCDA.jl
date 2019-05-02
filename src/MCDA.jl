@@ -2,7 +2,7 @@ module MCDA
 
 using LinearAlgebra
 
-export Criterion, Concept, addcriterion!, globalweight, criterionvalue, criterionconvertedvalue, criterionconvertedifneededvalue, promdiff, ConsRatio
+export Criterion, Concept, addcriterion!, globalweight, criterionvalue, criterionconvertedvalue, criterionconvertedifneededvalue, promdiff, ConsRatio, ranking
 
 struct Criterion
     name::String
