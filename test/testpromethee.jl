@@ -134,3 +134,13 @@ display(phim)
 phi = phip-phim
 println()
 display(phi)
+
+phi_j = zeros(10,6)
+for a = 1:10
+    for j = 1:6
+        for x = 1:10
+            phi_j(a,j) = phi_j(a,j)+(P(a,x,j)-P(x,a,j))/9
+        end
+    end
+end
+display(phi_j)

@@ -295,6 +295,6 @@ function buildCM(concepts, concept_idx, diff_function; smaller_is_better=false)
 end
 
 function ranking(data)
-    length(data)+1 .- sortperm(reshape(data,length(data)))
+    length(data)+1 .- (1:length(data))[invperm(sortperm(reshape(data,length(data))))]
 end
 end# module

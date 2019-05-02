@@ -1,5 +1,5 @@
-# include(joinpath(@__DIR__,"testpromethee.jl"))
-# exit()
+include(joinpath(@__DIR__,"testpromethee.jl"))
+exit()
 # include(joinpath(@__DIR__,"testAHP.jl"))
 # exit()
 # include(joinpath(@__DIR__,"testAHP_idealised.jl"))
