@@ -4,8 +4,8 @@
 # exit()
 # include(joinpath(@__DIR__,"testAHP_idealised.jl"))
 # exit()
-include(joinpath(@__DIR__,"runtestAHP.jl"))
-exit()
+# include(joinpath(@__DIR__,"runtestAHP.jl"))
+# exit()
 using MCDA
 using Test
 
