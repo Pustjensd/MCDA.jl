@@ -1,5 +1,7 @@
 using MCDA
 using Test
+using LinearAlgebra
+using DataFrames
 
 criteria = [
     Criterion("Maneuverability", 8, 0.115, MCDA.convertSymbolicScale),
@@ -213,3 +215,10 @@ priorityall = hcat(prioritycon1, prioritycon2, prioritycon3, prioritycon4, prior
 Totalpriority = priorityall * prioritycrit
 display(Totalpriority)
 println()
+
+df = DataFrame(Priority = ["Prio citerion", MCDA.name.(concepts)...], Maneuverability = [prioritycrit[1], prioritycon1...],
+Signature_profile = [prioritycrit[2], prioritycon2...], Redundancy = [prioritycrit[3], prioritycon3...],
+Nr_of_components = [prioritycrit[4], prioritycon4...], Space_consumption = [prioritycrit[5],
+ prioritycon5...], Weight = [prioritycrit[6], prioritycon6...] )
+ display(df)
+ println()

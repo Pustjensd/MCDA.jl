@@ -1,6 +1,7 @@
 using MCDA
 using Test
 using LinearAlgebra
+using DataFrames
 
 criteria = [
     Criterion("Manpower", 1, 0.116279, identity),
@@ -103,7 +104,7 @@ prioritycrit = sum(matcrit,dims=2)/sum(sum(matcrit))
 
 CMman = MCDA.buildCM(concepts, 1, MCDA.CMScale0_3)
 matman = CMman^100/10.0^100
-priorityman = sum(matman,dims=2)/sum(sum(matman))
+@show priorityman = sum(matman,dims=2)/sum(sum(matman))
 @show CRman =ConsRatio(CMman)
 
 CMpow = MCDA.buildCM(concepts, 2, MCDA.CMScale0_maxdiff)
@@ -128,7 +129,7 @@ priorityvil = sum(matvil,dims=2)/sum(sum(matvil))
 
 CMsaf = MCDA.buildCM(concepts, 6, MCDA.CMScale0_4)
 matsaf = CMsaf^100/10.0^100
-prioritysaf = sum(matsaf,dims=2)/sum(sum(matsaf))
+@show prioritysaf = sum(matsaf,dims=2)/sum(sum(matsaf))
 @show CRsaf = ConsRatio(CMsaf)
 
 # for idealized:
@@ -151,7 +152,10 @@ display(Totalpriority)
 println()
 
 # alternative method
-priorityall = hcat(priorityman, prioritypow, prioritycon, prioritymain, priorityvil, prioritysaf)
-Totalpriority = priorityall * prioritycrit
-display(Totalpriority)
+# priorityall = hcat(priorityman, prioritypow, prioritycon, prioritymain, priorityvil, prioritysaf)
+# Totalpriority = priorityall * prioritycrit
+# display(Totalpriority)
+# println()
+PN = DataFrame(Total_Priority = Totalpriority)
+display(PN)
 println()
