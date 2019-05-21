@@ -1,5 +1,5 @@
-include(joinpath(@__DIR__,"testpromethee.jl"))
-exit()
+# include(joinpath(@__DIR__,"testpromethee.jl"))
+# exit()
 # include(joinpath(@__DIR__,"testAHP.jl"))
 # exit()
 # include(joinpath(@__DIR__,"testAHP_idealised.jl"))
@@ -218,4 +218,7 @@ display(phi[perms])
 println()
 
 display(MCDA.name.(concepts[perms]))
+println()
+
+display(MCDA.ProfAlt(P))
 println()

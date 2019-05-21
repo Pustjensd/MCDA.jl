@@ -57,14 +57,14 @@ end
 
 function convertSymbolicScale(val)
     conversiondict = Dict([
-        ("ref", 5.0),
-        ("---", 10/14),
-        ("--", 30/14),
-        ("-", 50/14),
-        ("0", 70/14),
-        ("+", 90/14),
-        ("++", 110/14),
-        ("+++", 130/14)
+        ("ref", 70//14),
+        ("---", 10//14),
+        ("--", 30//14),
+        ("-", 50//14),
+        ("0", 70//14),
+        ("+", 90//14),
+        ("++", 110//14),
+        ("+++", 130//14)
     ])
     return conversiondict[val]
 end
@@ -150,6 +150,21 @@ function phim(pimat)
     nconcepts = size(pimat,1)
     return reshape(sum(pimat,dims=1)/(nconcepts-1),nconcepts)
 end
+
+function ProfAlt(P)
+    nconcepts = size(P,1)
+    ncriteria = size(P,3)
+    phi_j = zeros(nconcepts,ncriteria)
+    for a = 1:nconcepts
+        for j = 1:ncriteria
+            for x = 1:nconcepts
+                phi_j[a,j] = phi_j[a,j]+(P[a,x,j]-P[x,a,j])/(nconcepts-1)
+            end
+        end
+    end
+    return phi_j
+end
+
 """AHP"""
 function ConvertRI(val)
     conversiondict = Dict([
@@ -274,6 +289,37 @@ function CMscale0(diff, maxdiff)
     end
 end
 
+function CMScaleSymb(diff, maxdiff)
+if diff == 0
+return 1
+elseif diff == 20//14
+return 2
+elseif diff == 40//14
+return 3
+elseif diff == 60//14
+return 4
+elseif diff == 80//14
+return 6
+elseif diff == 100//14
+return 7
+elseif diff== 120//14
+return 8
+elseif diff == -20//14
+return 1/2
+elseif diff == -40//14
+return 1/3
+elseif diff == -60//14
+return 1/4
+elseif diff == -80//14
+return 1/5
+elseif diff == -100//14
+return 1/6
+elseif diff== -120//14
+return 1/7
+end
+error("No diff found for value $diff and maxdiff $maxdiff")
+end
+
 #if smaller is better:
 #Min: maximum(criterionvalue.(concepts,concept_idx))*ones(1,nconcepts)-criterionvalue.(concepts,concept_idx)
 #if bigger is better: max
@@ -295,6 +341,6 @@ function buildCM(concepts, concept_idx, diff_function; smaller_is_better=false)
 end
 
 function ranking(data)
-    length(data)+1 .- (1:length(data))[invperm(sortperm(reshape(data,length(data))))]
+    length(data)+1 .- invperm(sortperm(reshape(data,length(data))))
 end
 end# module
